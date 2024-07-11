@@ -35,7 +35,8 @@ class PersonDao {
   }
 
   Future<void> deletePerson(Person person) async {
-    int rowsDeleted = await _db.rawDelete('delete from $_tblName where id = ${person.id}');
+    int rowsDeleted =
+        await _db.rawDelete('delete from $_tblName where id = ${person.id}');
     debugPrint('Rows delete for $person : $rowsDeleted');
   }
 }

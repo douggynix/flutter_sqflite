@@ -24,10 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    /*WidgetsBinding.instance.addPostFrameCallback((_)  {
-      _retrievePersons();
-      setState(() {});
-    });*/
     _retrievePersons();
   }
 
@@ -35,9 +31,7 @@ class _HomePageState extends State<HomePage> {
     Database database = await dbHelper.getDatabase();
     _personDao = PersonDao(database: database);
     _persons = await _personDao.getPersons();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   Set<FloatingActionButtonLocation> get _floatingBtnLocation => {
@@ -46,31 +40,20 @@ class _HomePageState extends State<HomePage> {
             : FloatingActionButtonLocation.centerFloat
       };
 
-  void _onValidateForm(Person person) {
-    Future<void>.delayed(Duration.zero).then((_) {
-      _personDao.insertPerson(person).then(
-        (value) async {
-          _persons = await _personDao.getPersons();
-          setState(() {
-            _formKey.currentState!.reset();
-            debugPrint('SetState is called');
-          });
-        },
-      );
-
+  void _onValidateForm(Person person) async {
+    var _ = await _personDao.insertPerson(person);
+    _persons = await _personDao.getPersons();
+    setState(() {
+      _formKey.currentState!.reset();
+      debugPrint('SetState is called');
       debugPrint('Person validated : $person');
     });
   }
 
-  void _removeItem(Person person) {
-    Future<void>.delayed(Duration.zero).then(
-      (_) {
-        _personDao.deletePerson(person).then((value) async {
-          _persons = await _personDao.getPersons();
-          setState(() {});
-        });
-      },
-    );
+  void _removeItem(Person person) async {
+    var _ = await _personDao.deletePerson(person);
+    _persons = await _personDao.getPersons();
+    setState(() {});
   }
 
   void _toggleForm() {
@@ -88,50 +71,53 @@ class _HomePageState extends State<HomePage> {
         title: const Text('SQFLite demo'),
       ),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return constraints.maxWidth > 600.0
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_isFormVisible)
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return constraints.maxWidth > 600.0
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (_isFormVisible)
+                          Expanded(
+                              flex: 4,
+                              child: PersonFormBuilder(
+                                formKey: _formKey,
+                                onValidate: _onValidateForm,
+                                onCancel: _toggleForm,
+                              )),
                         Expanded(
+                          flex: 5,
+                          child: PersonListWidget(
+                            persons: _persons,
+                            onDeleteItem: _removeItem,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: PersonListWidget(
+                            persons: _persons,
+                            onDeleteItem: _removeItem,
+                          ),
+                        ),
+                        if (_isFormVisible)
+                          Expanded(
                             flex: 4,
                             child: PersonFormBuilder(
                               formKey: _formKey,
                               onValidate: _onValidateForm,
                               onCancel: _toggleForm,
-                            )),
-                      Expanded(
-                        flex: 5,
-                        child: PersonListWidget(
-                          persons: _persons,
-                          onDeleteItem: _removeItem,
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: PersonListWidget(
-                          persons: _persons,
-                          onDeleteItem: _removeItem,
-                        ),
-                      ),
-                      if (_isFormVisible)
-                        Expanded(
-                          flex: 4,
-                          child: PersonFormBuilder(
-                            formKey: _formKey,
-                            onValidate: _onValidateForm,
-                            onCancel: _toggleForm,
+                            ),
                           ),
-                        ),
-                    ],
-                  );
-          },
+                      ],
+                    );
+            },
+          ),
         ),
       ),
       floatingActionButton: SafeArea(

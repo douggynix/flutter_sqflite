@@ -36,13 +36,14 @@ class _PersonFormBuilderState extends State<PersonFormBuilder> {
           children: [
             Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadiusDirectional.all(Radius.circular(5.0)),
+                borderRadius:
+                    const BorderRadiusDirectional.all(Radius.circular(5.0)),
                 color: Theme.of(context).colorScheme.inversePrimary,
               ),
               alignment: Alignment.bottomRight,
               child: IconButton(
-                  onPressed: widget._onCancel,
-                  icon: const Icon(Icons.close),
+                onPressed: widget._onCancel,
+                icon: const Icon(Icons.close),
               ),
             ),
             FormBuilderTextField(

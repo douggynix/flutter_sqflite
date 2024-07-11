@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../model/person.dart';
 
 class PersonListWidget extends StatelessWidget {
-  const PersonListWidget({super.key, required persons, required onDeleteItem}) :
-        _persons = persons, _onDeleteItem = onDeleteItem;
+  const PersonListWidget({super.key, required persons, required onDeleteItem})
+      : _persons = persons,
+        _onDeleteItem = onDeleteItem;
   final List<Person> _persons;
   final Function(Person) _onDeleteItem;
 
@@ -16,7 +17,7 @@ class PersonListWidget extends StatelessWidget {
       (int index) {
         Person person = _persons[index];
         return PersonItemWidget(
-            person: person,
+          person: person,
           onDelete: _onDeleteItem,
         );
       },
@@ -25,8 +26,9 @@ class PersonListWidget extends StatelessWidget {
 }
 
 class PersonItemWidget extends StatelessWidget {
-   PersonItemWidget({super.key, required person, required onDelete}) :
-        _person = person, _onDelete = onDelete;
+  PersonItemWidget({super.key, required person, required onDelete})
+      : _person = person,
+        _onDelete = onDelete;
 
   final Person _person;
   final Function(Person) _onDelete;
@@ -41,20 +43,20 @@ class PersonItemWidget extends StatelessWidget {
           children: [
             Text('${_person.name}'),
             Expanded(
-
               child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('${_person.age}'),
-              ],
-            ),)
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('${_person.age}'),
+                ],
+              ),
+            )
           ],
         ),
         trailing: IconButton(
-            onPressed: (){
-              _onDelete(_person);
-            },
-            icon: const Icon(Icons.delete),
+          onPressed: () {
+            _onDelete(_person);
+          },
+          icon: const Icon(Icons.delete),
         ),
       ),
     );
